@@ -1,7 +1,33 @@
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+
+const { NODE_ENV, JWT_SECRET } = process.env;
+
 // add User model
 const User = require('../models/user');
 
-const { ERROR_CODE, ERROR_MESSAGE } = require('../utils/constants');
+const { ERROR_CODE, ERROR_MESSAGE } = require('./utils/constants');
+
+// user login
+const userLogin = (req, res) => {
+  const { email, password } = req.body;
+
+  return User.findUserByCredentials(email, password)
+    .then((user) => {
+      const token = jwt.sign(
+        { _id: data._id },
+        NODE_ENV === 'production' ? JWT_SECRET : 'super-secret-tool',
+        {
+          expiresIn: '7d',
+        }
+      );
+      const { password, ...user } = data._doc;
+      res.send({ data: user, token });
+    })
+    .catch((err) => {
+      res.status(401).send({ message: err.message });
+    });
+};
 
 // get all users
 const getUsers = (req, res) => {
@@ -36,12 +62,34 @@ const getUserById = (req, res) => {
     });
 };
 
+// get current user
+const getCurrentUser = (req, res, next) => {
+  const { _id: userId } = req.user;
+  User.findById(userId)
+    .orFail()
+    .then((user) => res.send({ data: user }))
+    .catch(next);
+};
+
 // create a new user
 const createUser = (req, res) => {
-  const { name, about, avatar } = req.body;
+  const { name, about, avatar, email, password } = req.body;
 
-  User.create({ name, about, avatar })
-    .then((user) => res.send({ data: user }))
+  User.findOne({ email })
+    .then((user) => {
+      if (user) {
+        res.status(ERROR_CODE.CONFLICT_ERROR);
+      } else {
+        return bcrypt.hash(password, 10);
+      }
+    })
+
+    // Hash the password
+    .then((hash) => User.create({ name, about, avatar, email, password: hash }))
+    .then((user) => {
+      const { password, ...user } = data._doc;
+      res.send({ data: user });
+    })
     .catch((err) => {
       if (err.name === 'ValidationError') {
         res
@@ -127,8 +175,10 @@ const updateUserAvatar = (req, res) => {
 
 module.exports = {
   getUsers,
+  getCurrentUser,
   getUserById,
   createUser,
   updateUser,
   updateUserAvatar,
+  userLogin,
 };

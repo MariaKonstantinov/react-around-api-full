@@ -2,12 +2,25 @@
   "extends": "airbnb-base",
   "rules": {
     "camelcase": ["error", { "allow": ["cards_id"] }],
-    "no-underscore-dangle": ["error", { "allow": ["_id"] }],
+    "no-underscore-dangle": ["error", { "allow": ["_id", "_doc"] }],
     "no-console": "off",
     "implicit-arrow-linebreak": "off",
     "operator-linebreak": "off",
     "no-useless-escape": "off",
     "comma-dangle": "off",
-    "function-paren-newline": "off"
+    "function-paren-newline": "off",
+    "object-curly-newline": "off",
+    "newline-per-chained-call": "off",
+    "eqeqeq": "off",
+    "func-names": "off",
+    "no-shadow": "off",
+    "no-unused-vars": [
+      "error",
+      {
+        "argsIgnorePattern": "next",
+        "vars": "all",
+        "varsIgnorePattern": "^password$"
+      }
+    ]
   }
 }

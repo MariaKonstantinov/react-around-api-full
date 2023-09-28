@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const { validateURL } = require('../helpers/validator');
 
 const cardSchema = new mongoose.Schema({
   name: {
@@ -11,10 +10,10 @@ const cardSchema = new mongoose.Schema({
   link: {
     type: String,
     required: [true, 'Please enter a URL'],
-    validate: {
-      validator: (url) => validateURL(url),
-      message: 'Please enter a valid URL for the card',
-    },
+    // validate: {
+    //   validator: (url) => validateURL(url),
+    //   message: 'Please enter a valid URL for the card',
+    // },
   },
   owner: {
     type: mongoose.Schema.Types.ObjectId,
@@ -25,6 +24,7 @@ const cardSchema = new mongoose.Schema({
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'user',
+      default: [],
     },
   ],
   createdAt: {
