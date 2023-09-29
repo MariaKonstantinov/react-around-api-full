@@ -1,0 +1,146 @@
+.popup {
+  position: fixed;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 50%);
+
+  /* adding transition */
+  display: flex;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0s linear 0.3s, opacity 0.3s linear;
+}
+
+.popup_type_tooltip {
+  text-align: center;
+}
+
+.popup__title_type_tooltip {
+  font-weight: 900;
+  font-size: 24px;
+  line-height: 29.05px;
+}
+
+.popup__form {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.popup__input {
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 1.2;
+  margin: 0 36px;
+  color: black;
+  border-color: rgba(0, 0, 0, 0.2);
+  padding-bottom: 13px;
+  border-width: 0 0 2px;
+  outline: 0;
+}
+
+/* adding different margin for job-input field */
+.popup__input:last-of-type {
+  margin: 29px 36px 0;
+}
+
+@media screen and (max-width: 320px) {
+  .popup__input {
+    margin: 0 22px;
+    padding-bottom: 9px;
+  }
+
+  .popup__input:last-of-type {
+    margin: 30px 22px 0;
+  }
+}
+
+.popup__title {
+  color: black;
+  font-weight: 900;
+  font-size: 24px;
+  line-height: 1.2;
+  padding: 0;
+  margin: 34px 64px 54px 36px;
+}
+
+@media screen and (max-width: 320px) {
+  .popup__title {
+    margin: 25px 22px 76px;
+    font-size: 18px;
+  }
+}
+
+.popup__window {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 430px;
+  background-color: white;
+  border-radius: 10px;
+  position: relative;
+}
+
+@media screen and (max-width: 550px) {
+  .popup__window {
+    width: 282px;
+    margin: auto;
+  }
+}
+
+@media screen and (max-width: 320px) {
+  .popup__window {
+    margin: 0 19px;
+  }
+}
+
+/* POPUP OPENED STATE ----------------------------- */
+.popup_opened {
+  visibility: visible;
+  opacity: 1;
+  transition-delay: 0s;
+}
+
+/* POPUP TYPE - ZOOM IMAGE ----------------------------- */
+.popup__zoom-image {
+  max-width: 75vw;
+  max-height: 75vh;
+  border-radius: 10px;
+}
+
+.popup__zoom-title {
+  margin: 0;
+  padding: 10px 0;
+  font-size: 12px;
+  line-height: 15px;
+  color: #ffffff;
+}
+
+.popup__zoom-wrapper {
+  background: transparent;
+  display: flex;
+  justify-content: center;
+  padding: 0;
+  width: fit-content;
+}
+
+/* STYLES FOR POPUP VALIDATION: ERROR MESSAGE STATE */
+.popup__form-error {
+  color: #ff0000;
+  font-size: 12px;
+  line-height: 1.2;
+  visibility: hidden;
+  margin: 4px 40px;
+}
+
+.popup__form-error_visible {
+  visibility: visible;
+}
+
+.popup__input_type_error {
+  border-color: #ff0000;
+}

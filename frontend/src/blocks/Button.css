@@ -1,0 +1,168 @@
+.button {
+  all: unset;
+  text-align: center;
+}
+
+/* Button STYLE LIKE ----------------------------------------------- */
+.button_style_like {
+  width: 21px;
+  height: 19px;
+  align-self: center;
+  padding-left: 26px;
+  background: url(../images/button_like.svg) no-repeat center;
+  cursor: pointer;
+}
+
+/* color - black - when clicked */
+.button_style_like-active {
+  background: url(../images/button_like-active.svg) no-repeat center;
+}
+
+/* Button TYPE ADD ----------------------------------------------- */
+.button_type_add {
+  background: url(../images/button_add.svg) no-repeat center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 150px;
+  height: 50px;
+  border: 2px solid #fff;
+  border-radius: 10px;
+  margin-left: auto;
+  box-sizing: border-box;
+  cursor: pointer;
+  transition: opacity 0.4s;
+}
+
+.button_type_add:hover {
+  opacity: 60%;
+}
+
+@media screen and (max-width: 650px) {
+  .button_type_add {
+    margin-left: 0;
+    width: 282px;
+  }
+}
+
+/* Button TYPE CLOSE ----------------------------------------------- */
+.button_type_close {
+  width: 40px;
+  height: 40px;
+  position: absolute;
+  top: -12%;
+  right: -10%;
+  background: url(../images/buttton_close.svg) no-repeat center;
+  background-size: 100%;
+  cursor: pointer;
+}
+
+.button_type_close:hover {
+  opacity: 0.6;
+}
+
+@media screen and (max-width: 550px) {
+  .button_type_close {
+    width: 26px;
+    height: 26px;
+    top: -45px;
+    right: -2px;
+  }
+}
+
+/* Button TYPE EDIT ----------------------------------------------- */
+.button_type_edit {
+  box-sizing: border-box;
+  cursor: pointer;
+  border: 1px white solid;
+  width: 24px;
+  height: 24px;
+  display: block;
+  align-self: center;
+  background: url(../images/button_edit.svg) no-repeat center;
+  background-size: 10px 10px;
+  border-radius: 6px;
+}
+
+.button_type_edit:hover {
+  opacity: 0.6;
+}
+
+@media screen and (max-width: 650px) {
+  .button_type_edit {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+/* Button TYPE SUBMIT ----------------------------------------------- */
+.button_type_submit {
+  color: white;
+  background-color: black;
+  margin: 48px 36px;
+  height: 50px;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 1.2;
+  border-radius: 8px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.button_type_submit:hover {
+  opacity: 0.8;
+}
+
+@media screen and (max-width: 550px) {
+  .button_type_submit {
+    margin: 46px 22px 25px;
+    height: 46px;
+    font-size: 14px;
+  }
+}
+
+/* Button TYPE TRASH ----------------------------------------------- */
+.button_type_trash {
+  position: absolute;
+  width: 18px;
+  height: 19px;
+  top: 18px;
+  right: 15px;
+  cursor: pointer;
+  transition: opacity 0.5s;
+
+  visibility: visible;
+}
+
+.button_type_trash_disabled {
+  visibility: hidden;
+  opacity: 0;
+}
+
+.button_type_trash:hover {
+  opacity: 50%;
+}
+
+/* Button TYPE ZOOM CARD ----------------------------------------------- */
+.button_type_zoom-card {
+  top: -40px;
+  right: -40px;
+}
+
+@media screen and (max-width: 768px) {
+  .button_type_zoom-card {
+    right: -30px;
+    top: -30px;
+    width: 30px;
+    height: 30px;
+  }
+}
+
+/* STYLES FOR POPUP ERROR STATE -------------------------------------------- */
+.button_type-submit_disabled {
+  background-color: #fff;
+  color: rgb(0, 0, 0, 0.2);
+  border: 1px solid;
+  border-color: rgb(0, 0, 0, 0.2);
+  cursor: default;
+}

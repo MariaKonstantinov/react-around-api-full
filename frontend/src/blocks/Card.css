@@ -1,0 +1,48 @@
+.card {
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  margin: 0 auto;
+  background-color: white;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.card__image {
+  border-radius: 10px 10px 0px 0px;
+  width: 100%;
+  height: 282px;
+  object-fit: cover;
+  cursor: pointer;
+}
+
+.card__content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 25px 15px 31px 21px;
+  width: 246px;
+}
+
+.card__title {
+  color: black;
+  font-size: 24px;
+  font-weight: 900;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  margin: 0;
+}
+
+.card__likes-container {
+  display: flex;
+  flex-direction: column;
+  row-gap: 7px;
+  max-width: 21px;
+}
+
+.card__likes {
+  color: black;
+  padding-left: 6px;
+}
