@@ -6,10 +6,15 @@ const { NODE_ENV, JWT_SECRET } = process.env;
 // add User model
 const User = require('../models/user');
 
-const { ERROR_CODE, ERROR_MESSAGE } = require('./utils/constants');
+const ConflictError = require('../errors/ConflictError');
+const NotFoundError = require('../errors/NotFoundError');
+const UnauthorizedError = require('../errors/UnauthorizedError');
+const BadRequestError = require('../errors/BadRequestError');
+
+const { ERROR_MESSAGE } = require('./utils/constants');
 
 // user login
-const userLogin = (req, res) => {
+const userLogin = (req, res, next) => {
   const { email, password } = req.body;
 
   return User.findUserByCredentials(email, password)
@@ -24,61 +29,50 @@ const userLogin = (req, res) => {
       const { password, ...user } = data._doc;
       res.send({ data: user, token });
     })
-    .catch((err) => {
-      res.status(401).send({ message: err.message });
-    });
-};
-
-// get all users
-const getUsers = (req, res) => {
-  User.find({})
-    .then((users) => res.send(users))
     .catch(() => {
-      res
-        .status(ERROR_CODE.INTERNAL_SERVER_ERROR)
-        .send({ message: ERROR_MESSAGE.INTERNAL_SERVER_ERROR });
+      next(new UnauthorizedError('Incorrect email or password'));
     });
 };
 
-// get user by id
-const getUserById = (req, res) => {
+// get all users - GET
+const getUsers = (req, res, next) => {
+  User.find({})
+    .then((users) => res.send({ data: users }))
+    .catch(next);
+};
+
+// get user by id - GET
+const getUserById = (req, res, next) => {
   User.findOne({ _id: req.params.user_id })
-    .orFail()
+    .orFail(new NotFoundError(ERROR_MESSAGE.NOT_FOUND))
     .then((user) => res.send({ data: user }))
+
     .catch((err) => {
-      if (err.name === 'DocumentNotFoundError') {
-        res
-          .status(ERROR_CODE.NOT_FOUND)
-          .send({ message: ERROR_MESSAGE.NOT_FOUND });
-      } else if (err.name === 'CastError') {
-        res
-          .status(ERROR_CODE.INCORRECT_DATA)
-          .send({ message: ERROR_MESSAGE.INCORRECT_DATA });
+      if (err.name === 'CastError') {
+        next(new BadRequestError(ERROR_MESSAGE.INCORRECT_DATA));
       } else {
-        res
-          .status(ERROR_CODE.INTERNAL_SERVER_ERROR)
-          .send({ message: ERROR_MESSAGE.INTERNAL_SERVER_ERROR });
+        next(err);
       }
     });
 };
 
-// get current user
+// get current user - GET
 const getCurrentUser = (req, res, next) => {
   const { _id: userId } = req.user;
   User.findById(userId)
-    .orFail()
+    .orFail(new NotFoundError(ERROR_MESSAGE.NOT_FOUND))
     .then((user) => res.send({ data: user }))
     .catch(next);
 };
 
-// create a new user
-const createUser = (req, res) => {
+// create a new user - POST
+const createUser = (req, res, next) => {
   const { name, about, avatar, email, password } = req.body;
 
   User.findOne({ email })
     .then((user) => {
       if (user) {
-        res.status(ERROR_CODE.CONFLICT_ERROR);
+        throw new ConflictError(ERROR_MESSAGE.CONFLICT);
       } else {
         return bcrypt.hash(password, 10);
       }
@@ -92,19 +86,15 @@ const createUser = (req, res) => {
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res
-          .status(ERROR_CODE.INCORRECT_DATA)
-          .send({ message: ERROR_MESSAGE.INCORRECT_DATA });
+        next(new BadRequestError('Invalid email or password'));
       } else {
-        res
-          .status(ERROR_CODE.INTERNAL_SERVER_ERROR)
-          .send({ message: ERROR_MESSAGE.INTERNAL_SERVER_ERROR });
+        next(err);
       }
     });
 };
 
-// update user profile
-const updateUser = (req, res) => {
+// update user profile - PATCH
+const updateUser = (req, res, next) => {
   const { name, about } = req.body;
 
   User.findByIdAndUpdate(
@@ -115,70 +105,49 @@ const updateUser = (req, res) => {
       runValidators: true,
     }
   )
-    .orFail()
+    .orFail(new NotFoundError(ERROR_MESSAGE.NOT_FOUND))
     .then((user) => res.send({ data: user }))
     .catch((err) => {
-      if (err.name === 'DocumentNotFoundError') {
-        res
-          .status(ERROR_CODE.NOT_FOUND)
-          .send({ message: ERROR_MESSAGE.NOT_FOUND });
-      } else if (err.name === 'CastError') {
-        res
-          .status(ERROR_CODE.INCORRECT_DATA)
-          .send({ message: ERROR_MESSAGE.INCORRECT_DATA });
-      } else if (err.name === 'ValidationError') {
-        res
-          .status(ERROR_CODE.INCORRECT_DATA)
-          .send({ message: ERROR_MESSAGE.INCORRECT_DATA });
+      if (err.name === 'CastError' || 'ValidationError') {
+        next(new BadRequestError(ERROR_MESSAGE.INCORRECT_DATA));
       } else {
-        res
-          .status(ERROR_CODE.INTERNAL_SERVER_ERROR)
-          .send({ message: ERROR_MESSAGE.INTERNAL_SERVER_ERROR });
+        next(err);
       }
     });
 };
 
-// update user avatar
-const updateUserAvatar = (req, res) => {
+// update user avatar - PATCH
+const updateUserAvatar = (req, res, next) => {
+  const currentUser = req.user._id;
   const { avatar } = req.body;
 
   User.findByIdAndUpdate(
-    req.user._id,
+    //req.user._id,
+    { _id: currentUser },
     { avatar },
     {
       new: true,
       runValidators: true,
+      upsert: false,
     }
   )
-    .orFail()
+    .orFail(new NotFoundError(ERROR_MESSAGE.NOT_FOUND))
     .then((user) => res.send({ data: user }))
     .catch((err) => {
-      if (err.name === 'DocumentNotFoundError') {
-        res
-          .status(ERROR_CODE.NOT_FOUND)
-          .send({ message: ERROR_MESSAGE.NOT_FOUND });
-      } else if (err.name === 'CastError') {
-        res
-          .status(ERROR_CODE.INCORRECT_DATA)
-          .send({ message: ERROR_MESSAGE.INCORRECT_DATA });
-      } else if (err.name === 'ValidationError') {
-        res
-          .status(ERROR_CODE.INCORRECT_DATA)
-          .send({ message: ERROR_MESSAGE.INCORRECT_DATA });
+      if (err.name === 'CastError' || 'ValidationError') {
+        next(new BadRequestError(ERROR_MESSAGE.INCORRECT_DATA));
       } else {
-        res
-          .status(ERROR_CODE.INTERNAL_SERVER_ERROR)
-          .send({ message: ERROR_MESSAGE.INTERNAL_SERVER_ERROR });
+        next(err);
       }
     });
 };
 
 module.exports = {
+  userLogin,
   getUsers,
   getCurrentUser,
   getUserById,
   createUser,
   updateUser,
   updateUserAvatar,
-  userLogin,
 };

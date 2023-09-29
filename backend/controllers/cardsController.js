@@ -1,118 +1,112 @@
 // add Card model
 const Card = require('../models/card');
 
-const { ERROR_CODE, ERROR_MESSAGE } = require('../utils/constants');
+const BadRequestError = require('../errors/BadRequestError');
+const ForbiddenError = require('../errors/ForbiddenError');
+const NotFoundError = require('../errors/NotFoundError');
 
-// get all cards
-const getCards = (req, res) => {
+const { ERROR_MESSAGE } = require('../utils/constants');
+
+// get all cards - GET
+const getCards = (req, res, next) => {
   Card.find({})
     .then((cards) => {
       res.send({ data: cards });
     })
-    .catch(() => {
-      res
-        .status(ERROR_CODE.INTERNAL_SERVER_ERROR)
-        .send({ message: ERROR_MESSAGE.INTERNAL_SERVER_ERROR });
-    });
+    .catch(next);
 };
 
-// post a card
-const createCard = (req, res) => {
+// post a card - POST
+const createCard = (req, res, next) => {
   const { name, link } = req.body;
+  //const owner = req.user._id;
+
   Card.create({ name, link, owner: req.user._id })
     .then((card) => res.send({ data: card }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res
-          .status(ERROR_CODE.INCORRECT_DATA)
-          .send({ message: ERROR_MESSAGE.INCORRECT_DATA });
+        next(new BadRequestError(ERROR_MESSAGE.INCORRECT_DATA));
       } else {
-        res
-          .status(ERROR_CODE.INTERNAL_SERVER_ERROR)
-          .send({ message: ERROR_MESSAGE.INTERNAL_SERVER_ERROR });
+        next(err);
       }
     });
 };
 
-// delete a card
-const deleteCard = (req, res) => {
+// delete a card - DELETE
+const deleteCard = (req, res, next) => {
   const { cards_id } = req.params;
+  const userId = req.user._id;
 
   Card.findByIdAndRemove(cards_id)
-    .orFail()
-    .then((card) => res.send({ data: card }))
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        res
-          .status(ERROR_CODE.INCORRECT_DATA)
-          .send({ message: ERROR_MESSAGE.INCORRECT_DATA });
+    .orFail(new NotFoundError(ERROR_MESSAGE.NOT_FOUND))
+
+    .then((card) => {
+      const { owner } = card;
+      if (owner != userId) {
+        return next(new ForbiddenError(ERROR_MESSAGE.FORBIDDEN));
       }
-      if (err.name === 'DocumentNotFoundError') {
-        res
-          .status(ERROR_CODE.NOT_FOUND)
-          .send({ message: ERROR_MESSAGE.NOT_FOUND });
-      } else {
-        res
-          .status(ERROR_CODE.INTERNAL_SERVER_ERROR)
-          .send({ message: ERROR_MESSAGE.INTERNAL_SERVER_ERROR });
-      }
-    });
+      return Card.findByIdAndRemove(cards_id).then(() => res.send(card));
+    })
+    .catch(next);
+
+  // .then((card) => res.send({ data: card }))
+
+  // .catch((err) => {
+  //   if (err.name === 'CastError') {
+  //     res
+  //       .status(ERROR_CODE.INCORRECT_DATA)
+  //       .send({ message: ERROR_MESSAGE.INCORRECT_DATA });
+  //   }
+  //   if (err.name === 'DocumentNotFoundError') {
+  //     res
+  //       .status(ERROR_CODE.NOT_FOUND)
+  //       .send({ message: ERROR_MESSAGE.NOT_FOUND });
+  //   } else {
+  //     res
+  //       .status(ERROR_CODE.INTERNAL_SERVER_ERROR)
+  //       .send({ message: ERROR_MESSAGE.INTERNAL_SERVER_ERROR });
+  //   }
+  // });
 };
 
-// like a card
-const likeCard = (req, res) => {
+// like a card - PUT
+const likeCard = (req, res, next) => {
   const { cards_id } = req.params;
+  //const userId = req.user._id;
 
   Card.findByIdAndUpdate(
     cards_id,
     { $addToSet: { likes: req.user._id } },
     { new: true }
   )
-    .orFail()
+    .orFail(new NotFoundError(ERROR_MESSAGE.NOT_FOUND))
     .then((likes) => res.send({ data: likes }))
     .catch((err) => {
       if (err.name === 'CastError') {
-        res
-          .status(ERROR_CODE.INCORRECT_DATA)
-          .send({ message: ERROR_MESSAGE.INCORRECT_DATA });
-      }
-      if (err.name === 'DocumentNotFoundError') {
-        res
-          .status(ERROR_CODE.NOT_FOUND)
-          .send({ message: ERROR_MESSAGE.NOT_FOUND });
+        next(new BadRequestError(ERROR_MESSAGE.INCORRECT_DATA));
       } else {
-        res
-          .status(ERROR_CODE.INTERNAL_SERVER_ERROR)
-          .send({ message: ERROR_MESSAGE.INTERNAL_SERVER_ERROR });
+        next(err);
       }
     });
 };
 
-// dislike a card
-const dislikeCard = (req, res) => {
+// dislike a card - DELETE LIKE
+const dislikeCard = (req, res, next) => {
   const { cards_id } = req.params;
+  //const userId = req.user._id;
 
   Card.findByIdAndUpdate(
     cards_id,
     { $pull: { likes: req.user._id } },
     { new: true }
   )
-    .orFail()
+    .orFail(new NotFoundError(ERROR_MESSAGE.NOT_FOUND))
     .then((likes) => res.send({ data: likes }))
     .catch((err) => {
       if (err.name === 'CastError') {
-        res
-          .status(ERROR_CODE.INCORRECT_DATA)
-          .send({ message: ERROR_MESSAGE.INCORRECT_DATA });
-      }
-      if (err.name === 'DocumentNotFoundError') {
-        res
-          .status(ERROR_CODE.NOT_FOUND)
-          .send({ message: ERROR_MESSAGE.NOT_FOUND });
+        next(new BadRequestError(ERROR_MESSAGE.INCORRECT_DATA));
       } else {
-        res
-          .status(ERROR_CODE.INTERNAL_SERVER_ERROR)
-          .send({ message: ERROR_MESSAGE.INTERNAL_SERVER_ERROR });
+        next(err);
       }
     });
 };
