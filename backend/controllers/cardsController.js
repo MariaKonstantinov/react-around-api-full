@@ -48,25 +48,6 @@ const deleteCard = (req, res, next) => {
       return Card.findByIdAndRemove(cards_id).then(() => res.send(card));
     })
     .catch(next);
-
-  // .then((card) => res.send({ data: card }))
-
-  // .catch((err) => {
-  //   if (err.name === 'CastError') {
-  //     res
-  //       .status(ERROR_CODE.INCORRECT_DATA)
-  //       .send({ message: ERROR_MESSAGE.INCORRECT_DATA });
-  //   }
-  //   if (err.name === 'DocumentNotFoundError') {
-  //     res
-  //       .status(ERROR_CODE.NOT_FOUND)
-  //       .send({ message: ERROR_MESSAGE.NOT_FOUND });
-  //   } else {
-  //     res
-  //       .status(ERROR_CODE.INTERNAL_SERVER_ERROR)
-  //       .send({ message: ERROR_MESSAGE.INTERNAL_SERVER_ERROR });
-  //   }
-  // });
 };
 
 // like a card - PUT
