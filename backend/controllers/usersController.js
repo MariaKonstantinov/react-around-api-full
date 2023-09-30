@@ -11,14 +11,14 @@ const NotFoundError = require('../errors/NotFoundError');
 const UnauthorizedError = require('../errors/UnauthorizedError');
 const BadRequestError = require('../errors/BadRequestError');
 
-const { ERROR_MESSAGE } = require('./utils/constants');
+const { ERROR_MESSAGE } = require('../utils/constants');
 
 // user login
 const userLogin = (req, res, next) => {
   const { email, password } = req.body;
 
   return User.findUserByCredentials(email, password)
-    .then((user) => {
+    .then((data) => {
       const token = jwt.sign(
         { _id: data._id },
         NODE_ENV === 'production' ? JWT_SECRET : 'super-secret-tool',
@@ -80,7 +80,7 @@ const createUser = (req, res, next) => {
 
     // Hash the password
     .then((hash) => User.create({ name, about, avatar, email, password: hash }))
-    .then((user) => {
+    .then((data) => {
       const { password, ...user } = data._doc;
       res.send({ data: user });
     })
@@ -122,7 +122,7 @@ const updateUserAvatar = (req, res, next) => {
   const { avatar } = req.body;
 
   User.findByIdAndUpdate(
-    //req.user._id,
+    // req.user._id,
     { _id: currentUser },
     { avatar },
     {

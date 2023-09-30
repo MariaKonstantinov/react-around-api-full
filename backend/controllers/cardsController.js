@@ -19,7 +19,7 @@ const getCards = (req, res, next) => {
 // post a card - POST
 const createCard = (req, res, next) => {
   const { name, link } = req.body;
-  //const owner = req.user._id;
+  // const owner = req.user._id;
 
   Card.create({ name, link, owner: req.user._id })
     .then((card) => res.send({ data: card }))
@@ -53,7 +53,7 @@ const deleteCard = (req, res, next) => {
 // like a card - PUT
 const likeCard = (req, res, next) => {
   const { cards_id } = req.params;
-  //const userId = req.user._id;
+  // const userId = req.user._id;
 
   Card.findByIdAndUpdate(
     cards_id,
@@ -74,7 +74,7 @@ const likeCard = (req, res, next) => {
 // dislike a card - DELETE LIKE
 const dislikeCard = (req, res, next) => {
   const { cards_id } = req.params;
-  //const userId = req.user._id;
+  // const userId = req.user._id;
 
   Card.findByIdAndUpdate(
     cards_id,
