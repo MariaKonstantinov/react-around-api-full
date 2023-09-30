@@ -16,7 +16,7 @@ function AppFullContent() {
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
   const [isCardPopupOpen, setIsCardPopupOpen] = useState(false);
   const [isDeleteCardPopupOpen, setIsDeleteCardPopupOpen] = useState(false);
-  const [selectedCard, setSelectedCard] = useState({});
+  const [selectedCard, setSelectedCard] = useState({ name: "", link: "" });
 
   // current user
   const [currentUser, setCurrentUser] = useState({});

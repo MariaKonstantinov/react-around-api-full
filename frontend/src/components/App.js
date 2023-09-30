@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Route, Switch, Redirect, useHistory } from "react-router-dom";
+
 import { auth } from "../utils/auth";
+
 import { AccountContext } from "../contexts/AccountContext";
 import ProtectedRoute from "./ProtectedRoute";
 
@@ -11,6 +13,9 @@ import AppFullContent from "./AppFullContent.js";
 import Login from "./Login";
 import Register from "./Register";
 import InfoToolTip from "./InfoToolTip";
+
+// API
+import { api } from "../utils/api";
 
 function App() {
   const history = useHistory();
@@ -28,6 +33,7 @@ function App() {
   useEffect(() => {
     const token = localStorage.getItem("jwt");
     if (token) {
+      const token = localStorage.getItem("jwt");
       auth
         .checkToken(token)
         .then((res) => {
@@ -55,7 +61,9 @@ function App() {
 
   const handleLogout = () => {
     localStorage.removeItem("jwt");
+    api.updatedAuthUserToken("");
     setLoggedIn(false);
+    history.push("/signin");
   };
 
   const login = (userData) => {
@@ -76,6 +84,7 @@ function App() {
       .register(credentials)
       .then((res) => {
         setIsInfoToolTipAction("successful");
+        api.updatedAuthUserToken(localStorage.getItem("jwt"));
 
         login(res.data);
       })
@@ -95,6 +104,7 @@ function App() {
     return auth
       .login(credentials)
       .then((res) => {
+        api.updatedAuthUserToken(localStorage.getItem("jwt"));
         login(res.data);
         setIsLoading(false);
       })

@@ -1,3 +1,5 @@
+import { baseUrl, headers } from "./constants";
+
 class Api {
   constructor({ baseUrl, headers }) {
     this._url = baseUrl;
@@ -8,6 +10,11 @@ class Api {
     return fetch(url, headers).then((res) =>
       res.ok ? res.json() : Promise.reject(`Error: ${res.status}`)
     );
+  };
+
+  // When the user logs in or logs out, we update the user token in the request header
+  updatedAuthUserToken = (token) => {
+    this.headers = { ...this.headers, authorization: `Bearer ${token}` };
   };
 
   // receiving user cards ---------------------------------------------->
@@ -81,11 +88,13 @@ class Api {
 
 // Instead of exporting the class itself, we export the newly created instance
 const api = new Api({
-  baseUrl: "https://around.nomoreparties.co/v1/cohort-3-en",
-  headers: {
-    authorization: "7d6faf2c-0a1b-4234-a80e-36eb1914e77c",
-    "Content-Type": "application/json",
-  },
+  baseUrl,
+  headers,
+  //baseUrl: "https://around.nomoreparties.co/v1/cohort-3-en",
+  // headers: {
+  //   authorization: "7d6faf2c-0a1b-4234-a80e-36eb1914e77c",
+  //   "Content-Type": "application/json",
+  // },
 });
 
 export { api };

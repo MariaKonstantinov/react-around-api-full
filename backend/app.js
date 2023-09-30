@@ -43,14 +43,25 @@ app.use(router);
 app.use(errors());
 app.use(errorHandler);
 
-// connect to the MongoDB server - TODO CHANGE CONNECTION FOR PROJECT 15
-mongoose.connect('mongodb://localhost:27017/aroundb', {
-  useNewUrlParser: true,
-  // useCreateIndex: false,
-  // useFindAndModify: false,
-});
+// mongoose.connect('mongodb://localhost:27017/aroundb', {
+//   useNewUrlParser: true,
+//   // useCreateIndex: false,
+//   // useFindAndModify: false,
+// });
 
 // connect port
-app.listen(PORT, () => {
-  console.log(`App listening on port ${PORT}`);
-});
+// app.listen(PORT, () => {
+//   console.log(`App listening on port ${PORT}`);
+// });
+
+mongoose
+  .connect(process.env.MONGO_SERVER)
+  .then(() => {
+    console.log('MongoDB cnnected');
+    app.listen(PORT, () => {
+      console.log(`App listening at port ${PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.log(err);
+  });
