@@ -50,18 +50,18 @@ mongoose.connect('mongodb://localhost:27017/aroundb', {
 });
 
 //connect port
-app.listen(PORT, () => {
-  console.log(`App listening on port ${PORT}`);
-});
+// app.listen(PORT, () => {
+//   console.log(`App listening on port ${PORT}`);
+// });
 
-// mongoose
-//   .connect(process.env.MONGO_SERVER)
-//   .then(() => {
-//     console.log('MongoDB cnnected');
-//     app.listen(PORT, () => {
-//       console.log(`App listening at port ${PORT}`);
-//     });
-//   })
-//   .catch((err) => {
-//     console.log(err);
-//   });
+mongoose
+  .connect(process.env.MONGO_SERVER)
+  .then(() => {
+    console.log('MongoDB connected');
+    app.listen(PORT, () => {
+      console.log(`App listening at port ${PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.log(err);
+  });
