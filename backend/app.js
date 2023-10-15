@@ -11,7 +11,7 @@ const router = require('./routes');
 const errorHandler = require('./middleware/errorHandler');
 
 const { apiLimiter } = require('./utils/rateLimit');
-
+console.log(process.env.MONGO_SERVER);
 // create a server
 const app = express();
 
@@ -43,11 +43,11 @@ app.use(router);
 app.use(errors());
 app.use(errorHandler);
 
-mongoose.connect('mongodb://localhost:27017/aroundb', {
-  useNewUrlParser: true,
-  // useCreateIndex: false,
-  // useFindAndModify: false,
-});
+// mongoose.connect('mongodb://localhost:27017/aroundb', {
+//   useNewUrlParser: true,
+//   // useCreateIndex: false,
+//   // useFindAndModify: false,
+// });
 
 //connect port
 // app.listen(PORT, () => {
