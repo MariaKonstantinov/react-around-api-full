@@ -11,6 +11,7 @@ const router = require('./routes');
 const errorHandler = require('./middleware/errorHandler');
 
 const { apiLimiter } = require('./utils/rateLimit');
+console.log(process.env.MONGO_SERVER);
 
 // create a server
 const app = express();
