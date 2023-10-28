@@ -1,7 +1,7 @@
 // Connect to Api
 const BASE_URL =
   process.env.NODE_ENV === "production"
-    ? "https://react-around-api-full-five.vercel.app"
+    ? "https://travel-stories.click"
     : "http://localhost:3000";
 
 export const baseUrl = BASE_URL;

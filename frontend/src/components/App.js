@@ -79,12 +79,15 @@ function App() {
   };
 
   function handleRegister(credentials) {
+    console.log(credentials);
     setIsLoading(true);
     auth
       .register(credentials)
       .then((res) => {
+        console.log("Before tip");
         setIsInfoToolTipAction("successful");
-        api.updatedAuthUserToken(localStorage.getItem("jwt"));
+        console.log("Before token");
+        api.updatedAuthUserToken(localStorage.getItem("jwt")); //TODO;
 
         login(res.data);
       })

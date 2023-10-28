@@ -2,87 +2,87 @@ import { baseUrl, headers } from "./constants";
 
 class Api {
   constructor({ baseUrl, headers }) {
-    this._url = baseUrl;
-    this._headers = headers;
+    this.baseUrl = baseUrl;
+    this.headers = headers;
   }
 
-  _customFetch = (url, headers) => {
-    return fetch(url, headers).then((res) =>
-      res.ok ? res.json() : Promise.reject(`Error: ${res.status}`)
-    );
-  };
+  processResponse(res) {
+    if (res.ok) {
+      return res.json();
+    } else {
+      return Promise.reject(`An error just occurred: ${res.status}`);
+    }
+  }
 
   // When the user logs in or logs out, we update the user token in the request header
   updatedAuthUserToken = (token) => {
     this.headers = { ...this.headers, authorization: `Bearer ${token}` };
   };
 
-  // receiving user cards ---------------------------------------------->
-  getInitialCards() {
-    return this._customFetch(`${this._url}/cards`, {
-      headers: this._headers,
-    });
+  getInitialcards() {
+    return fetch(`${this.baseUrl}/cards`, {
+      method: "GET",
+      headers: this.headers,
+    }).then(this.processResponse);
   }
 
   // receiving user information ---------------------------------------------->
   getUserData() {
-    return this._customFetch(`${this._url}/users/me`, {
-      headers: this._headers,
-    });
+    return fetch(`${this.baseUrl}/users/me`, {
+      method: "GET",
+      headers: this.headers,
+    }).then(this.processResponse);
   }
 
   //edit profile info with PATCH method ---------------------------------------------->
   editUserData({ name, about }) {
-    return this._customFetch(`${this._url}/users/me`, {
-      headers: this._headers,
+    return fetch(`${this.baseUrl}/users/me`, {
       method: "PATCH",
+      headers: this.headers,
       body: JSON.stringify({
         name: name,
         about: about,
       }),
-    });
-  }
-
-  // adding card to server with POST method ---------------------------------------------->
-  addCard({ name, link }) {
-    return this._customFetch(`${this._url}/cards`, {
-      headers: this._headers,
-      method: "POST",
-      body: JSON.stringify({
-        name: name,
-        link: link,
-      }),
-    });
-  }
-
-  // delete a card with DELETE method ---------------------------------------------->
-  deleteCard(cardId) {
-    return this._customFetch(`${this._url}/cards/${cardId}`, {
-      headers: this._headers,
-      method: "DELETE",
-    });
+    }).then(this.processResponse);
   }
 
   // edit profile avatar with PATCH method ---------------------------------------------->
   editAvatar(avatar) {
-    return this._customFetch(`${this._url}/users/me/avatar`, {
-      headers: this._headers,
+    return fetch(`${this.baseUrl}/users/me/avatar`, {
       method: "PATCH",
+      headers: this.headers,
       body: JSON.stringify({ avatar: avatar }),
-    });
+    }).then(this.processResponse);
+  }
+
+  // adding card to server with POST method ---------------------------------------------->
+  addCard({ name, link }) {
+    return fetch(`${this.baseUrl}/cards`, {
+      method: "POST",
+      headers: this.headers,
+      body: JSON.stringify({
+        name: name,
+        link: link,
+      }),
+    }).then(this.processResponse);
+  }
+
+  // delete a card with DELETE method ---------------------------------------------->
+  deleteCard(cardId) {
+    return fetch(`${this.baseUrl}/cards/${cardId}`, {
+      method: "DELETE",
+      headers: this.headers,
+    }).then(this.processResponse);
   }
 
   // method to change likes status (like and dislike)
   changeLikeCardStatus(cardId, isLiked) {
-    return isLiked
-      ? this._customFetch(`${this._url}/cards/likes/${cardId}`, {
-          headers: this._headers,
-          method: "DELETE",
-        })
-      : this._customFetch(`${this._url}/cards/likes/${cardId}`, {
-          headers: this._headers,
-          method: "PUT",
-        });
+    const method = isLiked ? "DELETE" : "PUT";
+
+    return fetch(`${this.baseUrl}/cards/likes/${cardId}`, {
+      method: method,
+      headers: this.headers,
+    }).then(this.processResponse);
   }
 }
 

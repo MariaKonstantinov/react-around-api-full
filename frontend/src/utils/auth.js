@@ -4,86 +4,69 @@ class Auth {
     this.headers = headers;
   }
 
-  _customFetch(url, options) {
-    return fetch(url, options)
-      .then(this.processResponse)
-      .catch((error) => {
-        return Promise.reject(`An error has occurred: ${error}`);
-      });
-  }
-
   processResponse(res) {
     if (res.ok) {
       return res.json();
     } else {
-      return Promise.reject(`An error has occurred: ${res.status}`);
+      return Promise.reject(`An error just occurred: ${res.status}`);
     }
   }
 
   // registration
   register(credentials) {
-    const signUpUrl = `${this.baseUrl}/signup`;
-    const signInUrl = `${this.baseUrl}/signin`;
-
-    const signUpOptions = {
+    return fetch(`${this.baseUrl}/signup`, {
       method: "POST",
       headers: this.headers,
       body: JSON.stringify(credentials),
-    };
+    })
+      .then(this.processResponse)
+      .then((data) => {
+        return fetch(`${this.baseUrl}/signin`, {
+          method: "POST",
+          headers: this.headers,
+          body: JSON.stringify(credentials),
+        })
+          .then(this.processResponse)
+          .then((res) => {
+            localStorage.setItem("jwt", res.token);
 
-    return this._customFetch(signUpUrl, signUpOptions).then((data) => {
-      const signInOptions = {
-        method: "POST",
-        headers: this.headers,
-        body: JSON.stringify(credentials),
-      };
-
-      return this._customFetch(signInUrl, signInOptions).then((res) => {
-        localStorage.setItem("jwt", res.token);
-        return data;
+            return data;
+          });
       });
-    });
   }
 
   // login
   login(data) {
-    const signInUrl = `${this.baseUrl}/signin`;
-
-    const signInOptions = {
+    return fetch(`${this.baseUrl}/signin`, {
       method: "POST",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
       },
       body: JSON.stringify(data),
-    };
-
-    return this._customFetch(signInUrl, signInOptions).then((data) => {
-      localStorage.setItem("jwt", data.token);
-      return this.checkToken(data.token);
-    });
+    })
+      .then(this.processResponse)
+      .then((data) => {
+        localStorage.setItem("jwt", data.token);
+        return this.checkToken(data.token);
+      });
   }
 
   // check token
   checkToken(token) {
-    const userUrl = `${this.baseUrl}/users/me`;
-
-    const userOptions = {
+    return fetch(`${this.baseUrl}/users/me`, {
       method: "GET",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-    };
-
-    return this._customFetch(userUrl, userOptions);
+    }).then(this.processResponse);
   }
 }
-
 const BASE_URL =
   process.env.NODE_ENV === "production"
-    ? "https://react-around-api-full-five.vercel.app"
+    ? "https://travel-stories.click"
     : "http://localhost:3000";
 
 export const auth = new Auth({
