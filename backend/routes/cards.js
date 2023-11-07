@@ -15,10 +15,10 @@ const {
   validateObjectId,
 } = require('../middleware/validation');
 
-cardsRouter.get('/cards', getCards);
-cardsRouter.post('/cards', validateCardBody, createCard);
-cardsRouter.delete('/cards/:cards_id', validateObjectId, deleteCard);
-cardsRouter.put('/cards/:cards_id/likes', validateObjectId, likeCard);
-cardsRouter.delete('/cards/:cards_id/likes', validateObjectId, dislikeCard);
+cardsRouter.get('/', getCards);
+cardsRouter.post('/', validateCardBody, createCard);
+cardsRouter.delete('/:_id', validateObjectId, deleteCard);
+cardsRouter.put('/:_id/likes', validateObjectId, likeCard);
+cardsRouter.delete('/:_id/likes', validateObjectId, dislikeCard);
 
 module.exports = cardsRouter;

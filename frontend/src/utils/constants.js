@@ -1,8 +1,11 @@
 // Connect to Api
-const BASE_URL =
-  process.env.NODE_ENV === "production"
-    ? "https://travel-stories.click"
-    : "http://localhost:3000";
+// const BASE_URL =
+//   process.env.NODE_ENV === "production"
+//     ? "https://api.travel-stories.click"
+//     : // : "http://localhost:3001"
+//       "http://localhost:3001";
+
+const BASE_URL = "http://localhost:3001";
 
 export const baseUrl = BASE_URL;
 export const headers = {

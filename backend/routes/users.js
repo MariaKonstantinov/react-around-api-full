@@ -16,10 +16,10 @@ const {
 
 const usersRouter = express.Router();
 
-usersRouter.get('/users', getUsers);
-usersRouter.get('/users/me', getCurrentUser);
-usersRouter.get('/users/:user_id', validateObjectId, getUserById);
-usersRouter.patch('/users/me', validateUserProfile, updateUser);
-usersRouter.patch('/users/me/avatar', validateUserAvatar, updateUserAvatar);
+usersRouter.get('/', getUsers);
+usersRouter.get('/me', getCurrentUser);
+usersRouter.get('/:user_id', validateObjectId, getUserById);
+usersRouter.patch('/me', validateUserProfile, updateUser);
+usersRouter.patch('/me/avatar', validateUserAvatar, updateUserAvatar);
 
 module.exports = usersRouter;

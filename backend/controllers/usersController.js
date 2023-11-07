@@ -17,8 +17,12 @@ const { ERROR_MESSAGE } = require('../utils/constants');
 const userLogin = (req, res, next) => {
   const { email, password } = req.body;
 
+  console.log(email);
   return User.findUserByCredentials(email, password)
     .then((data) => {
+      console.log('before jwt');
+      console.log(JWT_SECRET);
+      console.log('after jwt');
       const token = jwt.sign(
         { _id: data._id },
         NODE_ENV === 'production' ? JWT_SECRET : 'super-secret-tool',
@@ -26,8 +30,10 @@ const userLogin = (req, res, next) => {
           expiresIn: '7d',
         }
       );
+      console.log('here');
       const { password, ...user } = data._doc;
       res.send({ data: user, token });
+      console.log(`after send ${token}`);
     })
     .catch(() => {
       next(new UnauthorizedError('Incorrect email or password'));
@@ -58,7 +64,10 @@ const getUserById = (req, res, next) => {
 
 // get current user - GET
 const getCurrentUser = (req, res, next) => {
+  console.log('getCurrentUser');
   const { _id: userId } = req.user;
+  console.log(req);
+
   User.findById(userId)
     .orFail(new NotFoundError(ERROR_MESSAGE.NOT_FOUND))
     .then((user) => res.send({ data: user }))

@@ -17,7 +17,8 @@ const { apiLimiter } = require('./utils/rateLimit');
 const app = express();
 
 // specify port
-const { PORT = 3000 } = process.env;
+// const { PORT = 3001 } = process.env;
+const PORT = 3001;
 
 // APP USE -------------------------------------------->
 app.use(helmet());
@@ -28,6 +29,7 @@ app.use(bodyParser.json());
 
 app.use(bodyParser.urlencoded({ extended: true }));
 
+// TODO UNCOMMENT AFTER DEVELOPMENT
 app.use(cors());
 app.options('*', cors());
 

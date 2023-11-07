@@ -84,10 +84,9 @@ function App() {
     auth
       .register(credentials)
       .then((res) => {
-        console.log("Before tip");
         setIsInfoToolTipAction("successful");
-        console.log("Before token");
-        api.updatedAuthUserToken(localStorage.getItem("jwt")); //TODO;
+
+        api.updatedAuthUserToken(localStorage.getItem("jwt"));
 
         login(res.data);
       })
@@ -103,10 +102,12 @@ function App() {
   }
 
   function handleLogin(credentials) {
+    console.log(credentials);
     setIsLoading(true);
     return auth
       .login(credentials)
       .then((res) => {
+        console.log("Before updatedAuthUserToken");
         api.updatedAuthUserToken(localStorage.getItem("jwt"));
         login(res.data);
         setIsLoading(false);

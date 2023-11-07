@@ -6,8 +6,11 @@ function Card({ card, onCardClick, onCardLike, onCardDelete }) {
   // current user object derived from the context
   const currentUser = useContext(CurrentUserContext);
 
+  console.log(card);
+
   // Checking if the current user is the owner of the current card
   const isOwn = card.owner._id === currentUser._id;
+  // const isOwn = card.owner === currentUser._id;
 
   // Creating a variable which we'll then set in `className` for the delete button
   const cardDeleteButtonClassName = `button_type_trash ${
@@ -15,7 +18,7 @@ function Card({ card, onCardClick, onCardLike, onCardDelete }) {
   }`;
 
   // Checking if the card was liked by the current user
-  const isLiked = card.likes.some((user) => user._id === currentUser._id);
+  const isLiked = card.likes.some((cardId) => cardId === currentUser._id);
 
   // Creating a variable which we'll then set in `className` for the like button
   const cardLikeButtonClassName = `button_style_like ${
@@ -41,7 +44,6 @@ function Card({ card, onCardClick, onCardLike, onCardDelete }) {
         className={`button ${cardDeleteButtonClassName}`}
         aria-label="delete card button"
         onClick={handleDeleteClick}
-        // key={card._id}
       >
         <img
           src={binIcon}

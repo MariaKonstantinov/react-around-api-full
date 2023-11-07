@@ -52,6 +52,7 @@ function AppMain(props) {
               onCardClick={props.onCardClick}
               onCardLike={props.onCardLike}
               onCardDelete={props.onCardDelete}
+              likesCounter={card.likes.length}
             />
           ))}
         </ul>

@@ -18,6 +18,8 @@ function AppFullContent() {
   const [isDeleteCardPopupOpen, setIsDeleteCardPopupOpen] = useState(false);
   const [selectedCard, setSelectedCard] = useState({ name: "", link: "" });
 
+  //const [selectedCardToRemove, setSelectedCardToRemove] = useState();
+
   // current user
   const [currentUser, setCurrentUser] = useState({});
 
@@ -26,41 +28,50 @@ function AppFullContent() {
 
   // SECTION: requesting initial data from server (Edit Profile, Cards) -------------------->
 
-  useEffect(() => {
-    api
-      .getUserData()
-      .then((userInfo) => {
-        setCurrentUser(userInfo);
-      })
-      .catch((err) => console.log(err));
-  }, []);
+  // useEffect(() => {
+  //   Promise.all([api.getUserData()])
+  //     .then(([userInfo]) => {
+  //       setCurrentUser(userInfo.data);
+  //     })
+  //     .catch((err) => console.log(err));
+  // }, []);
+
+  // useEffect(() => {
+  //   Promise.all([api.getInitialCards()])
+  //     .then(([cards]) => {
+  //       setCards(cards.data);
+  //     })
+  //     .catch((err) => console.log(err));
+  // }, []);
 
   useEffect(() => {
-    api
-      .getInitialCards()
-      .then((cards) => {
-        setCards(cards);
+    Promise.all([api.getUserData(), api.getInitialCards()])
+      .then(([userInfo, cards]) => {
+        setCurrentUser(userInfo.data);
+        setCards(cards.data);
       })
       .catch((err) => console.log(err));
   }, []);
 
   // SECTION CARD LIKES FUNCTIONALITY --------------------------------------------------->
   function handleCardLike(card) {
-    const isLiked = card.likes.some((user) => user._id === currentUser._id);
+    const isLiked = card.likes.some((cardId) => cardId === currentUser._id);
     api
       .changeLikeCardStatus(card._id, isLiked)
-      .then((newCard) => {
+      .then((newCard) =>
         setCards((state) =>
           state.map((currentCard) =>
-            currentCard._id === card._id ? newCard : currentCard
+            currentCard._id === card._id ? newCard.data : currentCard
           )
-        );
-      })
+        )
+      )
       .catch((err) => console.log(err));
   }
 
   // SECTION DELETE CARD FUNCTIONALITY --------------------------------------------------->
-  const handleDeleteCardSubmission = () => {
+
+  // fUNCTION FROM PROJECT 14--------------------------------->
+  function handleDeleteCardSubmission() {
     api
       .deleteCard(selectedCard._id)
       .then(() => {
@@ -70,50 +81,65 @@ function AppFullContent() {
         closeAllPopups();
       })
       .catch((err) => console.log(err));
-  };
+  }
+
+  // function handleDeleteCardSubmission(card) {
+  //   api
+  //     .deleteCard(card._id)
+  //     .then(() => {
+  //       setCards((cards) =>
+  //         cards.filter((cardToRemove) => cardToRemove._id !== card._id)
+  //       );
+  //       closeAllPopups();
+  //     })
+  //     .catch((err) => console.log(err));
+  // }
 
   // SECTION: ADD CARD FUNCTIONALITY ------------------------------------------------->
-  const handleAddPlaceSubmit = ({ name, link }) => {
+  function handleAddPlaceSubmit({ name, link }) {
     api
       .addCard({ name, link })
       .then((newCard) => {
-        setCards([newCard, ...cards]);
+        const newCardArr = [...cards];
+        newCardArr.push(newCard.data);
+        setCards(newCardArr);
         closeAllPopups();
       })
       .catch((err) => console.log(err));
-  };
+  }
 
   // SECTION: POPUPS STATE DEFINITION - SET STATE FOR OPENED STATE -------------------->
 
-  const handleEditAvatarClick = () => {
+  function handleEditAvatarClick() {
     setIsEditAvatarPopupOpen(true);
-  };
+  }
 
-  const handleEditProfileClick = () => {
+  function handleEditProfileClick() {
     setIsEditProfilePopupOpen(true);
-  };
+  }
 
-  const handleAddPlaceClick = () => {
+  function handleAddPlaceClick() {
     setIsAddPlacePopupOpen(true);
-  };
+  }
 
-  const handleCardClick = (card) => {
+  function handleCardClick(card) {
     setIsCardPopupOpen(true);
     setSelectedCard(card);
-  };
+  }
 
-  const handleCardDelete = (card) => {
+  function handleCardDelete(card) {
     setIsDeleteCardPopupOpen(true);
+    //setSelectedCardToRemove(card);
     setSelectedCard(card);
-  };
+  }
 
   // SECTION: CLOSE POPUPS BY "ESCAPE" --------------------------------->
   useEffect(() => {
-    const closeByEscape = (e) => {
+    function closeByEscape(e) {
       if (e.key === "Escape") {
         closeAllPopups();
       }
-    };
+    }
 
     document.addEventListener("keydown", closeByEscape);
 
@@ -121,18 +147,28 @@ function AppFullContent() {
   }, []);
 
   // SECTION: UPDATE USER FUNCTIONALITY ------------------------------------------------->
-  const handleUpdateUser = ({ name, about }) => {
+  // const handleUpdateUser = ({ name, about }) => {
+  //   api
+  //     .editUserData({ name, about })
+  //     .then((newUser) => {
+  //       setCurrentUser(newUser);
+  //       closeAllPopups();
+  //     })
+  //     .catch((err) => console.log(err));
+  // };
+
+  function handleUpdateUser({ name, about }) {
     api
       .editUserData({ name, about })
-      .then((newUser) => {
-        setCurrentUser(newUser);
+      .then((userInfo) => {
+        setCurrentUser(userInfo.data);
         closeAllPopups();
       })
       .catch((err) => console.log(err));
-  };
+  }
 
   // SECTION: UPDATE AVATAR FUNCTIONALITY ------------------------------------------------->
-  const handleUpdateAvatar = ({ avatar }) => {
+  function handleUpdateAvatar({ avatar }) {
     api
       .editAvatar(avatar)
       .then((newUser) => {
@@ -140,7 +176,7 @@ function AppFullContent() {
         closeAllPopups();
       })
       .catch((err) => console.log(err));
-  };
+  }
 
   // SECTION: POPUPS STATE DEFINITION - SET STATE FOR CLOSED STATE -------------------->
 
@@ -191,6 +227,8 @@ function AppFullContent() {
         isOpen={isDeleteCardPopupOpen}
         onClose={closeAllPopups}
         onDeleteCardSubmission={handleDeleteCardSubmission}
+        //card={selectedCardToRemove}
+        card={selectedCard}
       />
     </CurrentUserContext.Provider>
   );

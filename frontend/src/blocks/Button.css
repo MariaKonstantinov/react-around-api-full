@@ -129,18 +129,22 @@
   top: 18px;
   right: 15px;
   cursor: pointer;
-  transition: opacity 0.5s;
+  transition: opacity 0.6s;
+  background-image: url("../images/trash-button.svg");
+  /* background-color: transparent; */
+  /* background-size: cover; */
 
   visibility: visible;
 }
 
 .button_type_trash_disabled {
   visibility: hidden;
-  opacity: 0;
+  opacity: 0.5;
 }
 
 .button_type_trash:hover {
-  opacity: 50%;
+  /* opacity: 50%; */
+  opacity: 5.2;
 }
 
 /* Button TYPE ZOOM CARD ----------------------------------------------- */
