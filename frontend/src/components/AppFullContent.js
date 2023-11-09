@@ -18,8 +18,6 @@ function AppFullContent() {
   const [isDeleteCardPopupOpen, setIsDeleteCardPopupOpen] = useState(false);
   const [selectedCard, setSelectedCard] = useState({ name: "", link: "" });
 
-  //const [selectedCardToRemove, setSelectedCardToRemove] = useState();
-
   // current user
   const [currentUser, setCurrentUser] = useState({});
 
@@ -27,22 +25,6 @@ function AppFullContent() {
   const [cards, setCards] = useState([]);
 
   // SECTION: requesting initial data from server (Edit Profile, Cards) -------------------->
-
-  // useEffect(() => {
-  //   Promise.all([api.getUserData()])
-  //     .then(([userInfo]) => {
-  //       setCurrentUser(userInfo.data);
-  //     })
-  //     .catch((err) => console.log(err));
-  // }, []);
-
-  // useEffect(() => {
-  //   Promise.all([api.getInitialCards()])
-  //     .then(([cards]) => {
-  //       setCards(cards.data);
-  //     })
-  //     .catch((err) => console.log(err));
-  // }, []);
 
   useEffect(() => {
     Promise.all([api.getUserData(), api.getInitialCards()])
@@ -83,18 +65,6 @@ function AppFullContent() {
       .catch((err) => console.log(err));
   }
 
-  // function handleDeleteCardSubmission(card) {
-  //   api
-  //     .deleteCard(card._id)
-  //     .then(() => {
-  //       setCards((cards) =>
-  //         cards.filter((cardToRemove) => cardToRemove._id !== card._id)
-  //       );
-  //       closeAllPopups();
-  //     })
-  //     .catch((err) => console.log(err));
-  // }
-
   // SECTION: ADD CARD FUNCTIONALITY ------------------------------------------------->
   function handleAddPlaceSubmit({ name, link }) {
     api
@@ -129,7 +99,6 @@ function AppFullContent() {
 
   function handleCardDelete(card) {
     setIsDeleteCardPopupOpen(true);
-    //setSelectedCardToRemove(card);
     setSelectedCard(card);
   }
 
@@ -147,15 +116,6 @@ function AppFullContent() {
   }, []);
 
   // SECTION: UPDATE USER FUNCTIONALITY ------------------------------------------------->
-  // const handleUpdateUser = ({ name, about }) => {
-  //   api
-  //     .editUserData({ name, about })
-  //     .then((newUser) => {
-  //       setCurrentUser(newUser);
-  //       closeAllPopups();
-  //     })
-  //     .catch((err) => console.log(err));
-  // };
 
   function handleUpdateUser({ name, about }) {
     api
@@ -172,7 +132,7 @@ function AppFullContent() {
     api
       .editAvatar(avatar)
       .then((newUser) => {
-        setCurrentUser(newUser);
+        setCurrentUser(newUser.data);
         closeAllPopups();
       })
       .catch((err) => console.log(err));
@@ -227,7 +187,6 @@ function AppFullContent() {
         isOpen={isDeleteCardPopupOpen}
         onClose={closeAllPopups}
         onDeleteCardSubmission={handleDeleteCardSubmission}
-        //card={selectedCardToRemove}
         card={selectedCard}
       />
     </CurrentUserContext.Provider>

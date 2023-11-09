@@ -15,9 +15,6 @@ const auth = (req, res, next) => {
   const token = authorization.replace('Bearer ', '');
   let payload;
 
-  console.log(`token ${token}`);
-  console.log(`JWT_SECRET! ${JWT_SECRET}`);
-
   try {
     payload = jwt.verify(
       token,
@@ -26,8 +23,6 @@ const auth = (req, res, next) => {
   } catch (err) {
     return next(new UnauthorizedError(ERROR_MESSAGE.UNAUTHORIZED));
   }
-
-  console.log(payload);
 
   req.user = payload; // assigning the payload to the request object
 

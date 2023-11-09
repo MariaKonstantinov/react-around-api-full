@@ -6,8 +6,6 @@ function Card({ card, onCardClick, onCardLike, onCardDelete }) {
   // current user object derived from the context
   const currentUser = useContext(CurrentUserContext);
 
-  console.log(card);
-
   // Checking if the current user is the owner of the current card
   const isOwn = card.owner._id === currentUser._id;
   // const isOwn = card.owner === currentUser._id;

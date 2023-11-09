@@ -18,7 +18,6 @@ const getCards = (req, res, next) => {
 
 // post a card - POST
 const createCard = (req, res, next) => {
-  console.log(`BE create start`);
   const { name, link } = req.body;
   const owner = req.user._id;
 
@@ -39,12 +38,11 @@ const createCard = (req, res, next) => {
 
 // delete a card - DELETE
 const deleteCard = (req, res, next) => {
-  console.log(`BE delete start`);
   // const { cards_id } = req.params;
   const cardId = req.params._id;
   const userId = req.user._id;
 
-  console.log(`BE delete ${cards_id}`);
+  console.log(`BE delete ${cardId}`);
 
   Card.findById(cardId)
     .orFail(new NotFoundError(ERROR_MESSAGE.NOT_FOUND))
@@ -61,7 +59,6 @@ const deleteCard = (req, res, next) => {
 
 // like a card - PUT
 const likeCard = (req, res, next) => {
-  //const { cards_id } = req.params;
   const cardId = req.params._id;
   const userId = req.user._id;
 
@@ -83,7 +80,6 @@ const likeCard = (req, res, next) => {
 
 // dislike a card - DELETE LIKE
 const dislikeCard = (req, res, next) => {
-  //const { cards_id } = req.params;
   const cardId = req.params._id;
   const userId = req.user._id;
 

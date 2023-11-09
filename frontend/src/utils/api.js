@@ -69,7 +69,6 @@ class Api {
   }
 
   // delete a card with DELETE method ---------------------------------------------->
-
   deleteCard(cardId) {
     return fetch(`${this.baseUrl}/cards/${cardId}`, {
       method: "DELETE",
@@ -87,121 +86,7 @@ class Api {
   }
 }
 
-// FUNCTIONALITY FROM PROJECT 13 ----------------------------->
-// class Api {
-//   constructor({ baseUrl, headers }) {
-//     this._url = baseUrl;
-
-//     this._headers = headers;
-//   }
-
-//   _customFetch = (url, headers) => {
-//     console.log(url);
-//     return fetch(url, headers).then((res) =>
-//       res.ok ? res.json() : Promise.reject(`Error: ${res.status}`)
-//     );
-//   };
-
-//   // receiving user cards ---------------------------------------------->
-
-//   getInitialCards() {
-//     return fetch(`${this._url}/cards`, {
-//       headers: this._headers,
-//       // headers: {
-//       //   authorization: `Bearer ${localStorage.getItem("jwt")}`,
-//       // },
-//     }).then((res) => this._customFetch(res));
-//   }
-
-//   // receiving user information ---------------------------------------------->
-
-//   getUserData() {
-//     return this._customFetch(`${this._url}/users/me`, {
-//       headers: this._headers,
-//       // headers: {
-//       //   authorization: `Bearer ${localStorage.getItem("jwt")}`,
-//       // },
-//     }).then((res) => this._customFetch(res));
-//   }
-
-//   // When the user logs in or logs out, we update the user token in the request header
-//   updatedAuthUserToken = (token) => {
-//     this.headers = { ...this._headers, authorization: `Bearer ${token}` };
-//   };
-
-//   //edit profile info with PATCH method ---------------------------------------------->
-
-//   editUserData({ name, about }) {
-//     return this._customFetch(`${this._url}/users/me`, {
-//       headers: this._headers,
-
-//       method: "PATCH",
-
-//       body: JSON.stringify({
-//         name: name,
-
-//         about: about,
-//       }),
-//     });
-//   }
-
-//   // adding card to server with POST method ---------------------------------------------->
-
-//   addCard({ name, link }) {
-//     return this._customFetch(`${this._url}/cards`, {
-//       headers: this._headers,
-
-//       method: "POST",
-
-//       body: JSON.stringify({
-//         name: name,
-
-//         link: link,
-//       }),
-//     });
-//   }
-
-//   // delete a card with DELETE method ---------------------------------------------->
-
-//   deleteCard(cardId) {
-//     return this._customFetch(`${this._url}/cards/${cardId}`, {
-//       headers: this._headers,
-
-//       method: "DELETE",
-//     });
-//   }
-
-//   // edit profile avatar with PATCH method ---------------------------------------------->
-
-//   editAvatar(avatar) {
-//     return this._customFetch(`${this._url}/users/me/avatar`, {
-//       headers: this._headers,
-
-//       method: "PATCH",
-
-//       body: JSON.stringify({ avatar: avatar }),
-//     });
-//   }
-
-//   // method to change likes status (like and dislike)
-
-//   changeLikeCardStatus(cardId, isLiked) {
-//     return isLiked
-//       ? this._customFetch(`${this._url}/cards/likes/${cardId}`, {
-//           headers: this._headers,
-
-//           method: "DELETE",
-//         })
-//       : this._customFetch(`${this._url}/cards/likes/${cardId}`, {
-//           headers: this._headers,
-
-//           method: "PUT",
-//         });
-//   }
-// }
-
 // Instead of exporting the class itself, we export the newly created instance
-
 const api = new Api({
   baseUrl: "http://localhost:3001",
 
