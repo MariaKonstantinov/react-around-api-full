@@ -5,7 +5,8 @@
 //     : // : "http://localhost:3001"
 //       "http://localhost:3001";
 
-const BASE_URL = "http://localhost:3001";
+//const BASE_URL = "http://localhost:3001";
+const BASE_URL = "http://travel-stories.click";
 
 export const baseUrl = BASE_URL;
 export const headers = {

@@ -75,7 +75,8 @@ class Auth {
 
 export const auth = new Auth({
   //baseUrl: "https://register.nomoreparties.co",
-  baseUrl: "http://localhost:3001",
+  //baseUrl: "http://localhost:3001",
+  baseUrl: "http://travel-stories.click",
   headers: {
     "Content-Type": "application/json",
   },
