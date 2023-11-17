@@ -10,8 +10,9 @@ const bodyParser = require('body-parser');
 const router = require('./routes');
 const errorHandler = require('./middleware/errorHandler');
 
+//const { requestLogger, errorLogger } = require('../middleware/logger');
+
 const { apiLimiter } = require('./utils/rateLimit');
-//console.log(process.env.MONGO_SERVER);
 
 // create a server
 const app = express();
@@ -29,9 +30,10 @@ app.use(bodyParser.json());
 
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// TODO UNCOMMENT AFTER DEVELOPMENT
 app.use(cors());
 app.options('*', cors());
+
+// app.use(requestLogger);
 
 // CODE FOR SERVER CRASH TESTING - TODO REMOVE AFTER PROJECT IS ACCEPTED !!!
 app.get('/crash-test', () => {
@@ -42,6 +44,8 @@ app.get('/crash-test', () => {
 
 // connecting router
 app.use(router);
+
+// app.use(errorLogger);
 
 app.use(errors());
 app.use(errorHandler);
