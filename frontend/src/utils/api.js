@@ -89,7 +89,7 @@ class Api {
 // Instead of exporting the class itself, we export the newly created instance
 const api = new Api({
   //baseUrl: "http://localhost:3001",
-  baseUrl: "https://travel-stories.click",
+  baseUrl: "https://api.travel-stories.click",
 
   headers: {
     authorization: `Bearer ${localStorage.getItem("jwt")}`,
