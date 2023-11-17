@@ -79,7 +79,6 @@ function App() {
   };
 
   function handleRegister(credentials) {
-    console.log(credentials);
     setIsLoading(true);
     auth
       .register(credentials)
@@ -102,12 +101,10 @@ function App() {
   }
 
   function handleLogin(credentials) {
-    console.log(credentials);
     setIsLoading(true);
     return auth
       .login(credentials)
       .then((res) => {
-        console.log("Before updatedAuthUserToken");
         api.updatedAuthUserToken(localStorage.getItem("jwt"));
         login(res.data);
         setIsLoading(false);
