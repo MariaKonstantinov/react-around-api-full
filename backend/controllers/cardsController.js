@@ -23,8 +23,6 @@ const createCard = (req, res, next) => {
 
   Card.create({ name, link, owner })
     .then((card) => {
-      console.log(`BE create create`);
-      console.log(card._id);
       res.send({ data: card });
     })
     .catch((err) => {
