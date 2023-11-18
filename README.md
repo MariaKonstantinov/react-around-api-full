@@ -14,7 +14,7 @@ Travel Stories social media app - is an interactive web application aiming for p
 
 **:four_leaf_clover: Project Technologies and Features**
 
-This app was integrated between Backend & Frontend repositories and deployed.
+This app was integrated between Backend & Frontend repositories and deployed on Google Cloud server.
 
 Front-End technologies & Features:
 
@@ -22,8 +22,8 @@ Front-End technologies & Features:
 
 Back-End technologies & Features:
 
-- Express.js / Node.js / MongoDB / JWT server authorization / Joi requests validation / centralized Error Handling / localStorage / Google Cloud server / Domain linked to the server.
+- Express.js / Node.js / MongoDB / JWT server authorization / Joi requests validation / centralized Error Handling / localStorage / Google Cloud server / Domain registered and linked to the server.
 
 **:four_leaf_clover: Project Link**
 
-- [Project Link]()
+- [Project Link](https://www.travel-stories.click)
