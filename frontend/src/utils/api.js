@@ -34,7 +34,6 @@ class Api {
 
   //edit profile info with PATCH method ---------------------------------------------->
   editUserData({ name, about }) {
-    console.log(baseUrl);
     return fetch(`${this.baseUrl}/users/me`, {
       method: "PATCH",
       headers: this.headers,

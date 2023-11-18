@@ -54,7 +54,6 @@ class Auth {
 
   // check token
   checkToken(token) {
-    //console.log("hello user");
     return fetch(`${this.baseUrl}/users/me`, {
       method: "GET",
       headers: {
