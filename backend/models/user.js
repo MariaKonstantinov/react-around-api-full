@@ -4,26 +4,23 @@ const bcrypt = require('bcryptjs');
 const userSchema = new mongoose.Schema({
   name: {
     type: String, // string
-    required: true, // required field
     default: 'Jacques Cousteau',
     minlength: 2, // min length is 2
     maxlength: 30, // max length is 30
   },
   about: {
     type: String, // string
-    required: true, // required field
     default: 'Explorer',
     minlength: 2, // min length is 2
     maxlength: 30, // max length is 30
   },
   avatar: {
     type: String, // string
-    required: [true, 'url is required'],
     default: 'https://pictures.s3.yandex.net/resources/avatar_1604080799.jpg',
-    // validate: {
-    //   validator: (url) => validateURL(url),
-    //   message: 'Please enter a valid URL for the avatar',
-    // },
+    validate: {
+      validator: (url) => validateURL(url),
+      message: 'Please enter a valid URL for the avatar',
+    },
   },
   email: {
     type: String,

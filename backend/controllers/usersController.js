@@ -109,7 +109,7 @@ const updateUser = (req, res, next) => {
     .orFail(new NotFoundError(ERROR_MESSAGE.NOT_FOUND))
     .then((user) => res.send({ data: user }))
     .catch((err) => {
-      if (err.name === 'CastError' || 'ValidationError') {
+      if (err.name === 'CastError' || err.name === 'ValidationError') {
         next(new BadRequestError(ERROR_MESSAGE.INCORRECT_DATA));
       } else {
         next(err);
@@ -134,7 +134,7 @@ const updateUserAvatar = (req, res, next) => {
     .orFail(new NotFoundError(ERROR_MESSAGE.NOT_FOUND))
     .then((user) => res.send({ data: user }))
     .catch((err) => {
-      if (err.name === 'CastError' || 'ValidationError') {
+      if (err.name === 'CastError' || err.name === 'ValidationError') {
         next(new BadRequestError(ERROR_MESSAGE.INCORRECT_DATA));
       } else {
         next(err);

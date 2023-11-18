@@ -19,7 +19,10 @@ const ERROR_MESSAGE = {
   FORBIDDEN: 'Sorry, you are not authorized to remove others card',
 };
 
+const DEF_MONGO_SERVER = 'mongodb://localhost:27017/aroundb';
+
 module.exports = {
   ERROR_CODE,
   ERROR_MESSAGE,
+  DEF_MONGO_SERVER,
 };

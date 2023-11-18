@@ -66,17 +66,9 @@ class Auth {
   }
 }
 
-// const BASE_URL = "https://34.127.118.187:3002"; // IP OF REMOTE SERVER
-
-//const BASE_URL = "http://localhost:3001";
-// process.env.NODE_ENV === "production"
-//   ? "http://34.168.206.18"
-//   : "http://localhost:3001";
-
 export const auth = new Auth({
-  //baseUrl: "https://register.nomoreparties.co",
-  //baseUrl: "http://localhost:3001",
   baseUrl: "https://api.travel-stories.click",
+
   headers: {
     "Content-Type": "application/json",
   },

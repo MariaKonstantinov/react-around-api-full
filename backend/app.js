@@ -10,15 +10,15 @@ const bodyParser = require('body-parser');
 const router = require('./routes');
 const errorHandler = require('./middleware/errorHandler');
 
-//const { requestLogger, errorLogger } = require('../middleware/logger');
+const { requestLogger, errorLogger } = require('./middleware/logger');
 
 const { apiLimiter } = require('./utils/rateLimit');
+
+const { DEF_MONGO_SERVER } = require('./utils/constants');
 
 // create a server
 const app = express();
 
-// specify port
-// const { PORT = 3001 } = process.env;
 const PORT = 3001;
 
 // APP USE -------------------------------------------->
@@ -33,7 +33,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
 app.options('*', cors());
 
-// app.use(requestLogger);
+app.use(requestLogger);
 
 // CODE FOR SERVER CRASH TESTING - TODO REMOVE AFTER PROJECT IS ACCEPTED !!!
 app.get('/crash-test', () => {
@@ -45,24 +45,15 @@ app.get('/crash-test', () => {
 // connecting router
 app.use(router);
 
-// app.use(errorLogger);
+app.use(errorLogger);
 
 app.use(errors());
 app.use(errorHandler);
 
-// mongoose.connect('mongodb://localhost:27017/aroundb', {
-//   useNewUrlParser: true,
-//   // useCreateIndex: false,
-//   // useFindAndModify: false,
-// });
-
-//connect port
-// app.listen(PORT, () => {
-//   console.log(`App listening on port ${PORT}`);
-// });
-
 mongoose
-  .connect(process.env.MONGO_SERVER)
+  .connect(
+    process.env.MONGO_SERVER ? process.env.MONGO_SERVER : DEF_MONGO_SERVER
+  )
   .then(() => {
     console.log('MongoDB connected');
     app.listen(PORT, () => {
