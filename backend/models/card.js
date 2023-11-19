@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { isURL } = require('validator');
 
 const cardSchema = new mongoose.Schema({
   name: {
@@ -11,7 +12,7 @@ const cardSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Please enter a URL'],
     validate: {
-      validator: (url) => validateURL(url),
+      validator: (url) => isURL(url),
       message: 'Please enter a valid URL for the card',
     },
   },
